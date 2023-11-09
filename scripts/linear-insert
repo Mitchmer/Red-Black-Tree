@@ -1,0 +1,21 @@
+i 0   # Should succeed
+i 10  # Should succeed
+i 20  # Should succeed
+i 30  # Should succeed
+i 40  # Should succeed
+i 50  # Should succeed
+r 0   # Should be 0
+r 10  # Should be 1
+r 20  # Should be 2
+r 30  # Should be 3
+r 40  # Should be 4
+r 50  # Should be 5
+r 5   # Should be 1
+r 15  # Should be 2
+r 25  # Should be 3
+s 0   # Should be 0
+s 1   # Should be 10
+s 2   # Should be 20
+s 3   # Should be 30
+s 4   # Should be 40
+s 5   # Should be 50

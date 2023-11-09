@@ -1,0 +1,30 @@
+We've provided two separate test drivers you can use to test out your code.
+The first is an automated, end-to-end test driver that blasts your
+implementation with a bunch of random operations, comparing your results
+against a (slower) reference solution. You can run these tests by running
+
+    ./run-tests
+    
+from the command line.
+
+Another option is to use our interactive testing environment, which you can
+do by running
+
+    ./explore
+    
+from the command-line. You can then issue commands as follows:
+
+   i value       # inserts value into the order statistics tree
+   c value       # see if the given value is present
+   r value       # returns the rank of the given value
+   s value       # returns the item with the given rank
+   p             # call your printDebugInfo function
+
+The explore program can also run a sequence of commands so you can run
+automated tests. To use this functionality, put your commands into a
+separate file with one command per line. Empty lines and whitespace are
+ignored, as is any text after a hash mark (#). Then, run
+
+    ./explore script-file-name
+    
+We've included some sample scripts in the scripts/ directory.

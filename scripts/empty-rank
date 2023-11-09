@@ -1,0 +1,4 @@
+r 0 # Should be 0, no elements of the tree exist to be less than this
+r 1 # Should be 0, no elements of the tree exist to be less than this
+r 2 # Should be 0, no elements of the tree exist to be less than this
+r 3 # Should be 0, no elements of the tree exist to be less than this
