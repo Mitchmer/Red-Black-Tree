@@ -344,7 +344,7 @@ size_t RedBlackTree::rankOf(int key) const {
 
 	int rank {};
 
-  while (current->key != key && current != nullptr) {
+  while (current != nullptr && current->key != key) {
     if (key > current->key) {
       if (current->left != nullptr) {
         rank += current->left->size + 1;
