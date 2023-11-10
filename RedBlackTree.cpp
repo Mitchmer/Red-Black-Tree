@@ -311,7 +311,17 @@ void RedBlackTree::rotateWithParent(Node* node) {
   oldParent->parent = node;
 
   oldParent->size = node->size;
-  node->size = node->left->size + node->right->size + 1;
+
+  // node->size = 0;
+  if (node->left != nullptr) {
+    node->size += node->left->size;
+  }
+  if (node->right != nullptr) {
+    node->size += node->right->size;
+  }
+  // node->size = node->left->size + node->right->size + 1;
+  // if (node->size < 1)
+    ++node->size;
 }
 
 /* Returns the sibling of a node, the other child of its parent. */
@@ -342,43 +352,61 @@ RedBlackTree::Node* RedBlackTree::siblingOf(Node* node) {
 size_t RedBlackTree::rankOf(int key) const {
 	cout << "Incoming rankOf key: " << key << endl;
 
-
 	Node* current = root;
 	printDebugInfoRec(current, 4);
+
 	int rank {};
-	if (current->key == key) { // if the root has the given key
-		if (current->left != nullptr)
-      		rank += current->left->size;
-	}
-
-  while (current != nullptr && current->key != key) {
-    if (key > current->key) { //816
-//    	if (current->right != nullptr) {
-	      	if (current->left != nullptr) {
-				rank += current->left->size;
-		    } 
-		    //else
-//		    	rank += 1;
-//		} 
-
-		if (current->left != nullptr)
-			cout << "size: " << current->left->size << endl;
-		rank += 1;
-	    current = current->right;
-
-    } else if (key < current->key) {
-      current = current->left;
-    } else {
-   		if (current->left != nullptr) {
-        	rank += current->left->size + 1;
-        }
- //else
-  //    		rank += 1;
-    }
+	if (current != nullptr) {
+		rank = current->size-1;
+  }
+  if (current->right != nullptr) {
+    rank -= current->right->size;
   }
 
-	cout << "Outgoing rankOf rank: " << rank << endl << endl;
+	// bool endLoop {false};
+  cout << "Rank before walk: " << rank << endl;
+  if (current != nullptr) {
+    cout << "Key before walk: " << current->key << endl;
+  }
+  
+	while (current != nullptr && key != current->key/*!endLoop*/) {
+    cout << "Current key: " << current->key << endl;
+		if (static_cast<int>(key) > current->key) {
+		  current = current->right;
+      if (current != nullptr) {
+        if (current->left != nullptr) {
+          rank += current->left->size + 1;
+        } else {
+          ++rank;
+        }
+      } else {
+        ++rank;
+      }
+		} else if (static_cast<int>(key) < current->key) {
+      current = current->left;
 
+      if (current != nullptr) {
+        if (current->right != nullptr) {
+          rank -= (current->right->size + 1);
+        } else {
+          --rank;
+        }
+      }
+		}// else {
+		  // if (current->left != nullptr) {
+		  //   currentRank += current->left->size;
+		  // } 
+		  // endLoop = true;
+		  //else
+		  //	currentRank += 1;
+		//}
+	}
+
+	cout << "Outgoing rank: " << rank << endl;
+
+  if (current != nullptr) {
+	  cout << "Outgoing select key: " << current->key << endl << endl;
+  }
 
   return rank;
 }
@@ -397,9 +425,9 @@ int RedBlackTree::select(size_t rank) const {
     currentRank -= current->right->size;
   }
 
-	bool endLoop {false};
+	// bool endLoop {false};
   cout << "Current Rank before walk: " << currentRank << endl;
-	while (current != nullptr && !endLoop) {
+	while (current != nullptr && currentRank != static_cast<int>(rank)/*!endLoop*/) {
 		if (static_cast<int>(rank) > currentRank) {
 		  current = current->right;
       if (current != nullptr) {
@@ -419,14 +447,14 @@ int RedBlackTree::select(size_t rank) const {
           --currentRank;
         }
       }
-		} else {
+		}// else {
 		  // if (current->left != nullptr) {
 		  //   currentRank += current->left->size;
 		  // } 
-		  endLoop = true;
+		  // endLoop = true;
 		  //else
 		  //	currentRank += 1;
-		}
+		//}
 	}
 
 	cout << "Outgoing currentRank: " << currentRank << endl;
@@ -452,6 +480,7 @@ void RedBlackTree::printDebugInfoRec(Node* root, unsigned indent) const {
     cout << setw(indent) << "" << "Node       " << root << '\n';
     cout << setw(indent) << "" << "Color:     " << colorToString(root->color) << '\n';
     cout << setw(indent) << "" << "Key:       " << root->key << '\n';
+    cout << setw(indent) << "" << "Size:      " << root->size << '\n';
     cout << setw(indent) << "" << "Left Child:" << '\n';
     printDebugInfoRec(root->left,  indent + 4);
     cout << setw(indent) << "" << "Right Child:" << '\n';
