@@ -355,9 +355,10 @@ size_t RedBlackTree::rankOf(int key) const {
     if (key > current->key) { //816
 //    	if (current->right != nullptr) {
 	      	if (current->left != nullptr) {
-				rank += current->left->size + 1;
-		    } else
-		    	rank += 1;
+				rank += current->left->size;
+		    } 
+		    //else
+//		    	rank += 1;
 //		} 
 
 		if (current->left != nullptr)
@@ -385,35 +386,41 @@ size_t RedBlackTree::rankOf(int key) const {
 /* Select operation. */
 int RedBlackTree::select(size_t rank) const {
 	cout << "Incoming select rank: " << rank << endl;
-  // TODO: Delete this comment and the next two lines, then implement this function.
 	Node* current = root;
+	printDebugInfoRec(current, 4);
 
 	int currentRank {};
-/*
-	if (current->left != nullptr)
-		if (currentRank == key) { // if the root has the given key
-      		rank += current->left->size + 1;
-		else
-			rank += 1;
-	}
-*/	
+	if (current != nullptr && current->left != nullptr)
+		currentRank = current->left->size;
+
+	bool endLoop {false};
+
    // take in a number k
-	while (current != nullptr && currentRank != static_cast<int>(rank)) {
+   //if (rank == 0) {
+   cout << "Current Rank before walk: " << currentRank << endl;
+	while (current != nullptr && !endLoop) {
 		if (static_cast<int>(rank) > currentRank) {
+		  current = current->right;
 		  if (current->left != nullptr) {
 		    currentRank += current->left->size + 1;
-		  } else
-		  	currentRank += 1;
-		  current = current->right;
+		  } 
+		  //else
+		//  	currentRank += 1;
 		} else if (static_cast<int>(rank) < currentRank) {
-		  current = current->left;
+			// TODO:
+			currentRank = current->left->size;
+		  	current = current->left;
 		} else {
 		  if (current->left != nullptr) {
-		    currentRank += current->left->size + 1;
-		  } else
-		  	currentRank += 1;
+		    currentRank += current->left->size;
+		  } 
+		  endLoop = true;
+		  //else
+		  //	currentRank += 1;
 		}
 	}
+
+	cout << "Outgoing currentRank: " << currentRank << endl;
 	cout << "Outgoing select key: " << current->key << endl << endl;
 	return current->key;
 }
