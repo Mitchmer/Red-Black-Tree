@@ -390,30 +390,39 @@ int RedBlackTree::select(size_t rank) const {
 	printDebugInfoRec(current, 4);
 
 	int currentRank {};
-	if (current != nullptr && current->left != nullptr)
-		currentRank = current->left->size;
+	if (current != nullptr) {
+		currentRank = current->size-1;
+  }
+  if (current->right != nullptr) {
+    currentRank -= current->right->size;
+  }
 
 	bool endLoop {false};
-
-   // take in a number k
-   //if (rank == 0) {
-   cout << "Current Rank before walk: " << currentRank << endl;
+  cout << "Current Rank before walk: " << currentRank << endl;
 	while (current != nullptr && !endLoop) {
 		if (static_cast<int>(rank) > currentRank) {
 		  current = current->right;
-		  if (current->left != nullptr) {
-		    currentRank += current->left->size + 1;
-		  } 
-		  //else
-		//  	currentRank += 1;
+      if (current != nullptr) {
+        if (current->left != nullptr) {
+          currentRank += current->left->size + 1;
+        } else {
+          ++currentRank;
+        }
+      }
 		} else if (static_cast<int>(rank) < currentRank) {
-			// TODO:
-			currentRank = current->left->size;
-		  	current = current->left;
+      current = current->left;
+
+      if (current != nullptr) {
+        if (current->right != nullptr) {
+          currentRank -= current->right->size + 1;
+        } else {
+          --currentRank;
+        }
+      }
 		} else {
-		  if (current->left != nullptr) {
-		    currentRank += current->left->size;
-		  } 
+		  // if (current->left != nullptr) {
+		  //   currentRank += current->left->size;
+		  // } 
 		  endLoop = true;
 		  //else
 		  //	currentRank += 1;

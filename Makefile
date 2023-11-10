@@ -3,7 +3,7 @@ CPP_FILES := $(filter-out $(TARGET_CPPS),$(wildcard *.cpp))
 OBJ_FILES := $(CPP_FILES:.cpp=.o)
 H_FILES   := $(wildcard *.h)
 
-CPP_FLAGS = --std=c++20 -Wall -Werror -Wpedantic -O0 -g
+CPP_FLAGS = --std=c++17 -Wall -Werror -Wpedantic -O0 -g
 
 all: run-tests explore
 
