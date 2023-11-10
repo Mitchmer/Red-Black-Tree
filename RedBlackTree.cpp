@@ -312,7 +312,7 @@ void RedBlackTree::rotateWithParent(Node* node) {
 
   oldParent->size = node->size;
 
-  // node->size = 0;
+  node->size = 1;
   if (node->left != nullptr) {
     node->size += node->left->size;
   }
@@ -321,7 +321,7 @@ void RedBlackTree::rotateWithParent(Node* node) {
   }
   // node->size = node->left->size + node->right->size + 1;
   // if (node->size < 1)
-    ++node->size;
+    // ++node->size;
 }
 
 /* Returns the sibling of a node, the other child of its parent. */
