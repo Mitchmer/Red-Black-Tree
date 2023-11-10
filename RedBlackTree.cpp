@@ -58,7 +58,7 @@ bool RedBlackTree::insert(int key) {
   /* Now, perform fixup logic to restore the red/black properties. */
   fixupFrom(node);
 
-  cout << endl << "Inserted key: " << key;
+  // cout << endl << "Inserted key: " << key;
   return true;
 }
 
@@ -71,33 +71,38 @@ RedBlackTree::Node* RedBlackTree::insertKey(int key) {
   Node* prev = nullptr;
   Node* curr = root;
   
-  while (curr != nullptr) {
-    ++curr->size;
-    prev = curr;
+  if (!contains(key)) {
+    while (curr != nullptr) {
+      ++curr->size;
+      prev = curr;
+      
+      if      (key == curr->key)   return nullptr;       // Already present
+      else if (key <  curr->key)   curr = curr->left;
+      else /*  key >  curr->key */ curr = curr->right;
+    }
     
-    if      (key == curr->key)   return nullptr;       // Already present
-    else if (key <  curr->key)   curr = curr->left;
-    else /*  key >  curr->key */ curr = curr->right;
+    /* Step two: Do the actual insertion. */
+    Node* node   = new Node;
+    node->key    = key;
+    node->color  = Color::BLACK; // Default to black, can change later.
+    node->left   = node->right = nullptr; // No children
+    node->parent = prev; // Parent is the last node we saw
+    node->size   = 1;
+
+    /* Step three: Wire this node into the tree. */
+    if (prev == nullptr) {
+      root = node;
+    } else if (key < prev->key) {
+      prev->left = node;
+    } else /*  key > prev->key */ {
+      prev->right = node;
+    }
+
+    return node;
+  } else {
+    return nullptr;
   }
   
-  /* Step two: Do the actual insertion. */
-  Node* node   = new Node;
-  node->key    = key;
-  node->color  = Color::BLACK; // Default to black, can change later.
-  node->left   = node->right = nullptr; // No children
-  node->parent = prev; // Parent is the last node we saw
-  // node->size   = 1;
-
-  /* Step three: Wire this node into the tree. */
-  if (prev == nullptr) {
-    root = node;
-  } else if (key < prev->key) {
-    prev->left = node;
-  } else /*  key > prev->key */ {
-    prev->right = node;
-  }
-
-  return node;
 }
 
 /* Applies the fixup rules to restore the red/black tree invariants. */
@@ -311,6 +316,16 @@ void RedBlackTree::rotateWithParent(Node* node) {
   Node* oldParent = node->parent;
   node->parent = oldParent->parent;
   oldParent->parent = node;
+
+  if (child != nullptr) {
+    child->size = 1;
+    if (child->left != nullptr) {
+      child->size += child->left->size;
+    }
+    if (child->right != nullptr) {
+      child->size += child->right->size;
+    }
+  }
 
   // oldParent->size = node->size;
   oldParent->size = 1;
