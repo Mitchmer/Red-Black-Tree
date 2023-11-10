@@ -84,7 +84,8 @@ RedBlackTree::Node* RedBlackTree::insertKey(int key) {
   node->color  = Color::BLACK; // Default to black, can change later.
   node->left   = node->right = nullptr; // No children
   node->parent = prev; // Parent is the last node we saw
-  
+  node->size   = 1;
+
   /* Step three: Wire this node into the tree. */
   if (prev == nullptr) {
     root = node;
@@ -339,38 +340,82 @@ RedBlackTree::Node* RedBlackTree::siblingOf(Node* node) {
 // }
 
 size_t RedBlackTree::rankOf(int key) const {
-  // TODO: Delete this comment and the next two lines, then implement this function.
-	Node* current = root;
+	cout << "Incoming rankOf key: " << key << endl;
 
+
+	Node* current = root;
+	printDebugInfoRec(current, 4);
 	int rank {};
+	if (current->key == key) { // if the root has the given key
+		if (current->left != nullptr)
+      		rank += current->left->size;
+	}
+
   while (current != nullptr && current->key != key) {
-    if (key > current->key) {
-      if (current->left != nullptr) {
-        rank += current->left->size + 1;
-      } else
-      	rank += 1;
-      current = current->right;
+    if (key > current->key) { //816
+//    	if (current->right != nullptr) {
+	      	if (current->left != nullptr) {
+				rank += current->left->size + 1;
+		    } else
+		    	rank += 1;
+//		} 
+
+		if (current->left != nullptr)
+			cout << "size: " << current->left->size << endl;
+		rank += 1;
+	    current = current->right;
+
     } else if (key < current->key) {
       current = current->left;
     } else {
-      rank += current->left->size + 1;
+   		if (current->left != nullptr) {
+        	rank += current->left->size + 1;
+        }
+ //else
+  //    		rank += 1;
     }
   }
-	cout << "rank: " << rank << endl;
+
+	cout << "Outgoing rankOf rank: " << rank << endl << endl;
+
+
   return rank;
 }
 
 /* Select operation. */
 int RedBlackTree::select(size_t rank) const {
+	cout << "Incoming select rank: " << rank << endl;
   // TODO: Delete this comment and the next two lines, then implement this function.
+	Node* current = root;
 
-  // take in a number k
-
-  // return the kth order statistic
-	cout << "select Function";
-	cin.get();
-  (void) rank;
-  return 0;
+	int currentRank {};
+/*
+	if (current->left != nullptr)
+		if (currentRank == key) { // if the root has the given key
+      		rank += current->left->size + 1;
+		else
+			rank += 1;
+	}
+*/	
+   // take in a number k
+	while (current != nullptr && currentRank != static_cast<int>(rank)) {
+		if (static_cast<int>(rank) > currentRank) {
+		  if (current->left != nullptr) {
+		    currentRank += current->left->size + 1;
+		  } else
+		  	currentRank += 1;
+		  current = current->right;
+		} else if (static_cast<int>(rank) < currentRank) {
+		  current = current->left;
+		} else {
+		  if (current->left != nullptr) {
+		    currentRank += current->left->size + 1;
+		  } else
+		  	currentRank += 1;
+		}
+	}
+	cout << "Outgoing select key: " << current->key << endl << endl;
+	return current->key;
 }
 
 /* Prints debugging information. This is just to make testing a bit easier. */
