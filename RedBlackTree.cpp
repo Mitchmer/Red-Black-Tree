@@ -343,16 +343,23 @@ size_t RedBlackTree::rankOf(int key) const {
 	cout << current->key;
 
 	int rank {};
-	// current = walkTreeForRank(key, root, rank);
-	//if has a left child
-		// recursive left
-	//if has a right child
-		// recursive right
-	// otherwise end
+
+  while (current->key != key && current != nullptr) {
+    if (key > current->key) {
+      if (current->left != nullptr) {
+        rank += current->left->size + 1;
+      }
+      current = current->right;
+    } else if (key < current->key) {
+      current = current->left;
+    } else {
+      rank += current->left->size + 1;
+    }
+  }
+
   cout << "rankOf function";
   cin.get();
-  (void) key;
-  return 0;
+  return rank;
 }
 
 /* Select operation. */
