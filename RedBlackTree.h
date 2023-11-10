@@ -90,6 +90,7 @@ private:
 
   struct Node {
     int    key;         // The key itself
+    int    size; //Self-explanatory
     Color  color;       // What color we are
     
     Node*  left;        // Left and right children

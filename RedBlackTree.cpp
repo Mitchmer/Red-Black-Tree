@@ -71,6 +71,7 @@ RedBlackTree::Node* RedBlackTree::insertKey(int key) {
   
   while (curr != nullptr) {
     prev = curr;
+    ++curr->size;
     
     if      (key == curr->key)   return nullptr;       // Already present
     else if (key <  curr->key)   curr = curr->left;
@@ -306,6 +307,9 @@ void RedBlackTree::rotateWithParent(Node* node) {
   Node* oldParent = node->parent;
   node->parent = oldParent->parent;
   oldParent->parent = node;
+
+  oldParent->size = node->size;
+  node->size = node->left->size + node->right->size + 1;
 }
 
 /* Returns the sibling of a node, the other child of its parent. */
@@ -321,17 +325,17 @@ RedBlackTree::Node* RedBlackTree::siblingOf(Node* node) {
 
 /* Rank operation. */
 
-void walkTreeForRank(int key, const Node* node, int& rank) {
-	if (node->key < key) {
-		if (node->left != nullptr) {
-			node = node->left;
-			walkTreeForRank(key, node
+// void walkTreeForRank(int key, const Node* node, int& rank) {
+// 	if (node->key < key) {
+// 		if (node->left != nullptr) {
+// 			node = node->left;
+// 			walkTreeForRank(key, node
 
-		}
-	} else {
-			r
-	}
-}
+// 		}
+// 	} else {
+// 			r
+// 	}
+// }
 
 size_t RedBlackTree::rankOf(int key) const {
   // TODO: Delete this comment and the next two lines, then implement this function.
@@ -339,7 +343,7 @@ size_t RedBlackTree::rankOf(int key) const {
 	cout << current->key;
 
 	int rank {};
-	current = walkTreeForRank(key, root, rank);
+	// current = walkTreeForRank(key, root, rank);
 	//if has a left child
 		// recursive left
 	//if has a right child
