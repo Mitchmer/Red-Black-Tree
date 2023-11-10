@@ -361,10 +361,10 @@ RedBlackTree::Node* RedBlackTree::siblingOf(Node* node) {
 
 /* Rank operation. */
 size_t RedBlackTree::rankOf(int key) const {
-	cout << "Incoming rankOf key: " << key << endl;
+	// cout << "Incoming rankOf key: " << key << endl;
 
 	Node* current = root;
-	printDebugInfoRec(current, 4);
+	// printDebugInfoRec(current, 4);
 
 	int rank {};
 	if (current != nullptr) {
@@ -385,32 +385,20 @@ size_t RedBlackTree::rankOf(int key) const {
 		if (static_cast<int>(key) > current->key) {
 		  current = current->right;
       if (current != nullptr) {
-        if (current->left != nullptr) {
-          rank += current->left->size /*+ 1*/;
-        } //else {
-          // ++rank;
-        // }
-      } //else {
-        ++rank;
-      //}
+        if (current->left != nullptr)
+          rank += current->left->size;
+      } 
+      ++rank;
 		} else if (static_cast<int>(key) < current->key) {
       current = current->left;
 
       if (current != nullptr) {
         if (current->right != nullptr) {
-          rank -= (current->right->size/* + 1*/);
-        } //else {
-          --rank;
-        //}
+          rank -= (current->right->size);
+        }
+        --rank;
       }
-		}// else {
-		  // if (current->left != nullptr) {
-		  //   currentRank += current->left->size;
-		  // } 
-		  // endLoop = true;
-		  //else
-		  //	currentRank += 1;
-		//}
+		}
 	}
 
 	// cout << "Outgoing rank: " << rank << endl;
@@ -424,8 +412,14 @@ size_t RedBlackTree::rankOf(int key) const {
 
 /* Select operation. */
 int RedBlackTree::select(size_t rank) const {
-	// cout << "Incoming select rank: " << rank << endl;
+  if (static_cast<int>(rank) > root->size-1) {
+    throw runtime_error("ERROR: Rank passed > tree size!!");
+  }
+
+  // if (rank > 1000)
+	//   cout << "Incoming select rank: " << rank << endl;
 	Node* current = root;
+  Node* previous = nullptr;
 	// printDebugInfoRec(current, 4);
 
 	int currentRank {};
@@ -437,10 +431,12 @@ int RedBlackTree::select(size_t rank) const {
     }
   }
 
-	// bool endLoop {false};
-  // cout << "Current Rank before walk: " << currentRank << endl;
+  // if (rank > 1000) {
+  //   cout << "Current Rank before walk: " << currentRank << endl;
+  // }
 	while (current != nullptr && currentRank != static_cast<int>(rank)/*!endLoop*/) {
 		if (static_cast<int>(rank) > currentRank) {
+      previous = current;
 		  current = current->right;
       if (current != nullptr) {
         if (current->left != nullptr) {
@@ -450,6 +446,7 @@ int RedBlackTree::select(size_t rank) const {
         }
       }
 		} else if (static_cast<int>(rank) < currentRank) {
+      previous = current;
       current = current->left;
 
       if (current != nullptr) {
@@ -459,19 +456,22 @@ int RedBlackTree::select(size_t rank) const {
           --currentRank;
         }
       }
-		}// else {
-		  // if (current->left != nullptr) {
-		  //   currentRank += current->left->size;
-		  // } 
-		  // endLoop = true;
-		  //else
-		  //	currentRank += 1;
-		//}
+		}
 	}
 
-	// cout << "Outgoing currentRank: " << currentRank << endl;
-	// cout << "Outgoing select key: " << current->key << endl << endl;
-	return current->key;
+  // if (rank > 1000) {
+	//   cout << "Outgoing currentRank: " << currentRank << endl;
+  //   if (current != nullptr) {
+	//     cout << "Outgoing select current key: " << current->key << endl << endl;
+  //   } else {
+  //     cout << "Outgoing select previous key: " << previous->key << endl << endl;
+  //   }
+  // }
+  if (current != nullptr) {
+	  return current->key;
+  } else {
+    return previous->key;
+  }
 }
 
 /* Prints debugging information. This is just to make testing a bit easier. */
