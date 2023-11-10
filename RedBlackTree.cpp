@@ -93,7 +93,7 @@ RedBlackTree::Node* RedBlackTree::insertKey(int key) {
   } else /*  key > prev->key */ {
     prev->right = node;
   }
-  
+
   return node;
 }
 
@@ -255,6 +255,7 @@ void RedBlackTree::fixupFrom(Node* node) {
     
     node = grandparent;
   }
+
 }
 
 /* Standard rotation logic. We just have to remember to adjust the root and
@@ -340,15 +341,14 @@ RedBlackTree::Node* RedBlackTree::siblingOf(Node* node) {
 size_t RedBlackTree::rankOf(int key) const {
   // TODO: Delete this comment and the next two lines, then implement this function.
 	Node* current = root;
-	cout << current->key;
 
 	int rank {};
-
   while (current != nullptr && current->key != key) {
     if (key > current->key) {
       if (current->left != nullptr) {
         rank += current->left->size + 1;
-      }
+      } else
+      	rank += 1;
       current = current->right;
     } else if (key < current->key) {
       current = current->left;
@@ -356,9 +356,7 @@ size_t RedBlackTree::rankOf(int key) const {
       rank += current->left->size + 1;
     }
   }
-
-  cout << "rankOf function";
-  cin.get();
+	cout << "rank: " << rank << endl;
   return rank;
 }
 
