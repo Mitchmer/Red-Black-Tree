@@ -57,6 +57,8 @@ bool RedBlackTree::insert(int key) {
   
   /* Now, perform fixup logic to restore the red/black properties. */
   fixupFrom(node);
+
+  cout << endl << "Inserted key: " << key;
   return true;
 }
 
@@ -70,8 +72,8 @@ RedBlackTree::Node* RedBlackTree::insertKey(int key) {
   Node* curr = root;
   
   while (curr != nullptr) {
-    prev = curr;
     ++curr->size;
+    prev = curr;
     
     if      (key == curr->key)   return nullptr;       // Already present
     else if (key <  curr->key)   curr = curr->left;
@@ -84,7 +86,7 @@ RedBlackTree::Node* RedBlackTree::insertKey(int key) {
   node->color  = Color::BLACK; // Default to black, can change later.
   node->left   = node->right = nullptr; // No children
   node->parent = prev; // Parent is the last node we saw
-  node->size   = 1;
+  // node->size   = 1;
 
   /* Step three: Wire this node into the tree. */
   if (prev == nullptr) {
@@ -310,7 +312,14 @@ void RedBlackTree::rotateWithParent(Node* node) {
   node->parent = oldParent->parent;
   oldParent->parent = node;
 
-  oldParent->size = node->size;
+  // oldParent->size = node->size;
+  oldParent->size = 1;
+  if (oldParent->left != nullptr) {
+    oldParent->size += oldParent->left->size;
+  }
+  if (oldParent->right != nullptr) {
+    oldParent->size += oldParent->right->size;
+  }
 
   node->size = 1;
   if (node->left != nullptr) {
@@ -336,19 +345,6 @@ RedBlackTree::Node* RedBlackTree::siblingOf(Node* node) {
 }
 
 /* Rank operation. */
-
-// void walkTreeForRank(int key, const Node* node, int& rank) {
-// 	if (node->key < key) {
-// 		if (node->left != nullptr) {
-// 			node = node->left;
-// 			walkTreeForRank(key, node
-
-// 		}
-// 	} else {
-// 			r
-// 	}
-// }
-
 size_t RedBlackTree::rankOf(int key) const {
 	cout << "Incoming rankOf key: " << key << endl;
 
@@ -364,33 +360,33 @@ size_t RedBlackTree::rankOf(int key) const {
   }
 
 	// bool endLoop {false};
-  cout << "Rank before walk: " << rank << endl;
-  if (current != nullptr) {
-    cout << "Key before walk: " << current->key << endl;
-  }
+  // cout << "Rank before walk: " << rank << endl;
+  // if (current != nullptr) {
+  //   cout << "Key before walk: " << current->key << endl;
+  // }
   
 	while (current != nullptr && key != current->key/*!endLoop*/) {
-    cout << "Current key: " << current->key << endl;
+    // cout << "Current key: " << current->key << endl;
 		if (static_cast<int>(key) > current->key) {
 		  current = current->right;
       if (current != nullptr) {
         if (current->left != nullptr) {
-          rank += current->left->size + 1;
-        } else {
-          ++rank;
-        }
-      } else {
+          rank += current->left->size /*+ 1*/;
+        } //else {
+          // ++rank;
+        // }
+      } //else {
         ++rank;
-      }
+      //}
 		} else if (static_cast<int>(key) < current->key) {
       current = current->left;
 
       if (current != nullptr) {
         if (current->right != nullptr) {
-          rank -= (current->right->size + 1);
-        } else {
+          rank -= (current->right->size/* + 1*/);
+        } //else {
           --rank;
-        }
+        //}
       }
 		}// else {
 		  // if (current->left != nullptr) {
@@ -402,31 +398,32 @@ size_t RedBlackTree::rankOf(int key) const {
 		//}
 	}
 
-	cout << "Outgoing rank: " << rank << endl;
+	// cout << "Outgoing rank: " << rank << endl;
 
-  if (current != nullptr) {
-	  cout << "Outgoing select key: " << current->key << endl << endl;
-  }
+  // if (current != nullptr) {
+	//   cout << "Outgoing select key: " << current->key << endl << endl;
+  // }
 
   return rank;
 }
 
 /* Select operation. */
 int RedBlackTree::select(size_t rank) const {
-	cout << "Incoming select rank: " << rank << endl;
+	// cout << "Incoming select rank: " << rank << endl;
 	Node* current = root;
-	printDebugInfoRec(current, 4);
+	// printDebugInfoRec(current, 4);
 
 	int currentRank {};
 	if (current != nullptr) {
 		currentRank = current->size-1;
-  }
-  if (current->right != nullptr) {
-    currentRank -= current->right->size;
+
+    if (current->right != nullptr) {
+      currentRank -= current->right->size;
+    }
   }
 
 	// bool endLoop {false};
-  cout << "Current Rank before walk: " << currentRank << endl;
+  // cout << "Current Rank before walk: " << currentRank << endl;
 	while (current != nullptr && currentRank != static_cast<int>(rank)/*!endLoop*/) {
 		if (static_cast<int>(rank) > currentRank) {
 		  current = current->right;
@@ -457,8 +454,8 @@ int RedBlackTree::select(size_t rank) const {
 		//}
 	}
 
-	cout << "Outgoing currentRank: " << currentRank << endl;
-	cout << "Outgoing select key: " << current->key << endl << endl;
+	// cout << "Outgoing currentRank: " << currentRank << endl;
+	// cout << "Outgoing select key: " << current->key << endl << endl;
 	return current->key;
 }
 
