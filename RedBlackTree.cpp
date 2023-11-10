@@ -327,7 +327,6 @@ void RedBlackTree::rotateWithParent(Node* node) {
     }
   }
 
-  // oldParent->size = node->size;
   oldParent->size = 1;
   if (oldParent->left != nullptr) {
     oldParent->size += oldParent->left->size;
@@ -343,9 +342,6 @@ void RedBlackTree::rotateWithParent(Node* node) {
   if (node->right != nullptr) {
     node->size += node->right->size;
   }
-  // node->size = node->left->size + node->right->size + 1;
-  // if (node->size < 1)
-    // ++node->size;
 }
 
 /* Returns the sibling of a node, the other child of its parent. */
@@ -361,10 +357,7 @@ RedBlackTree::Node* RedBlackTree::siblingOf(Node* node) {
 
 /* Rank operation. */
 size_t RedBlackTree::rankOf(int key) const {
-	// cout << "Incoming rankOf key: " << key << endl;
-
 	Node* current = root;
-	// printDebugInfoRec(current, 4);
 
 	int rank {};
 	if (current != nullptr) {
@@ -373,15 +366,8 @@ size_t RedBlackTree::rankOf(int key) const {
   if (current->right != nullptr) {
     rank -= current->right->size;
   }
-
-	// bool endLoop {false};
-  // cout << "Rank before walk: " << rank << endl;
-  // if (current != nullptr) {
-  //   cout << "Key before walk: " << current->key << endl;
-  // }
   
-	while (current != nullptr && key != current->key/*!endLoop*/) {
-    // cout << "Current key: " << current->key << endl;
+	while (current != nullptr && key != current->key) {
 		if (static_cast<int>(key) > current->key) {
 		  current = current->right;
       if (current != nullptr) {
@@ -401,12 +387,6 @@ size_t RedBlackTree::rankOf(int key) const {
 		}
 	}
 
-	// cout << "Outgoing rank: " << rank << endl;
-
-  // if (current != nullptr) {
-	//   cout << "Outgoing select key: " << current->key << endl << endl;
-  // }
-
   return rank;
 }
 
@@ -416,11 +396,8 @@ int RedBlackTree::select(size_t rank) const {
     throw runtime_error("ERROR: Rank passed > tree size!!");
   }
 
-  // if (rank > 1000)
-	//   cout << "Incoming select rank: " << rank << endl;
 	Node* current = root;
   Node* previous = nullptr;
-	// printDebugInfoRec(current, 4);
 
 	int currentRank {};
 	if (current != nullptr) {
@@ -431,10 +408,7 @@ int RedBlackTree::select(size_t rank) const {
     }
   }
 
-  // if (rank > 1000) {
-  //   cout << "Current Rank before walk: " << currentRank << endl;
-  // }
-	while (current != nullptr && currentRank != static_cast<int>(rank)/*!endLoop*/) {
+	while (current != nullptr && currentRank != static_cast<int>(rank)) {
 		if (static_cast<int>(rank) > currentRank) {
       previous = current;
 		  current = current->right;
@@ -459,14 +433,6 @@ int RedBlackTree::select(size_t rank) const {
 		}
 	}
 
-  // if (rank > 1000) {
-	//   cout << "Outgoing currentRank: " << currentRank << endl;
-  //   if (current != nullptr) {
-	//     cout << "Outgoing select current key: " << current->key << endl << endl;
-  //   } else {
-  //     cout << "Outgoing select previous key: " << previous->key << endl << endl;
-  //   }
-  // }
   if (current != nullptr) {
 	  return current->key;
   } else {
@@ -480,11 +446,7 @@ void RedBlackTree::printDebugInfo() const {
   cout << flush;
 }
 
-/* Prints information about this node and its left and right subtrees.
- *
- * Optional TODO: Edit this function to print out additional debugging
- * information for testing.
- */
+/* Prints information about this node and its left and right subtrees. */
 void RedBlackTree::printDebugInfoRec(Node* root, unsigned indent) const {
   if (root == nullptr) {
     cout << setw(indent) << "" << "null" << '\n';
